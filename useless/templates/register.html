@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Авторизация</title>
+
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/sb-admin.min.css'%}" rel="stylesheet">
+
+</head>
+
+<body class="bg-dark">
+
+  <div class="container">
+
+    <div class="d-flex justify-content-center">
+        <img src="{% static '/imgs/logo.png' %}" class="img-fluid mt-5">
+    </div>
+
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Регистрация в Useless</div>
+      <div class="card-body">
+        <form action="{% url 'register' %}" method="post" id="registerForm">
+            {% csrf_token %}
+            <div class="form-group">
+              <div class="form-label-group">
+                <input type="text" id="inputUsername" name="username" class="form-control" placeholder="username" autocomplete="username" autofocus="autofocus">
+                <label for="inputUsername">Имя пользователя</label>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Зарегистрироваться</button><br/>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
+  <script src="{%static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+
+</body>
+
+</html>

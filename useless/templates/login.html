@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Авторизация</title>
+
+  <link href="{% static  'vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/sb-admin.min.css'%}" rel="stylesheet">
+
+</head>
+
+<body class="bg-dark">
+
+  <div class="container">
+
+    <div class="d-flex justify-content-center">
+        <img src="{% static '/imgs/logo.png' %}" class="img-fluid mt-5">
+    </div>
+
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Авторизация в Useless</div>
+      <div class="card-body">
+          {% if invalid %}
+              <div class="alert alert-danger">Не удалось авторизоваться</div>
+          {% endif %}
+          <form action="{% url 'login' %}" method="post" id="loginForm">
+            {% csrf_token %}
+            <input type="hidden" name="passkeys" id="passkeys"/>
+            <button class="btn btn-primary btn-block" type="button" onclick="authn('loginForm')">
+                <img src="{% static 'passkeys/imgs/FIDO-Passkey_Icon-White.png' %}" style="width: 24px"> &nbsp;Войти с ключом доступа
+            </button>
+            <a href="/auth/register" class="btn btn-block btn-dark">Зарегистрироваться</a><br/>
+            {% include 'passkeys.js' %}
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
+  <script src="{%static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+
+</body>
+
+</html>

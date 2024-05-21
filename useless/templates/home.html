@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- TODO: илья перенеси этот стиль в home.css и загружай его из /static/css -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            animation: changeBg 3s infinite ease;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        @keyframes changeBg {
+            0% {
+                background-color: #000;
+            }
+            50% {
+                background-color: #0a0a0a;
+            }
+            100% {
+                background-color: #000;
+            }
+        }
+
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .font-sf {
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .text-row {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 1.5em;
+        }
+
+        .title-text {
+            color: rgb(99, 99, 102);
+            font-size: 0.75em;
+        }
+
+        .value-text {
+            margin-left: 5px;
+            font-family: SFMono-Regular, monospace;
+            font-size: 0.75em;
+            color: rgb(142, 142, 147);
+        }
+
+        .username-text {
+            color: rgb(10, 132, 255);
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .footnote {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: center;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            filter: brightness(0.8)
+        }
+
+        .top-right-button {
+            position: absolute;
+            filter: brightness(0) invert(1);
+            top: 30px;
+            right: 48px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .element {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .element.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+  <a href="/auth/logout" class="top-right-button">
+    <img src="{% static 'imgs/exit.png' %}" style="width: 28px">
+  </a>
+
+  <div class="text-container font-sf">
+    {% if request.GET.registered %}
+    <div class="welcome-text">с регистрацией,</div>
+    {% else %}
+    <div class="welcome-text">добро пожаловать,</div>
+    {% endif %}
+    <div class="username-text">{{ request.user.username }}</div>
+  </div>
+
+  {% if request.session.current_passkey %}
+
+  {% with passkey=request.session.current_passkey %}
+  {% with id=request.session.current_passkey_id %}
+  {% with challenge=request.session.current_challenge  %}
+
+  <div class="text-row font-sf element" style="margin-top: 35px;">
+    <div class="title-text">key id</div>
+    <div class="value-text">{{ id }}</div>
+  </div>
+
+  <div class="text-row font-sf element">
+    <div class="title-text">challenge</div>
+    <div class="value-text">{{ challenge }}</div>
+  </div>
+
+  <div class="text-row font-sf element">
+    <div class="title-text">authenticator data</div>
+    <div class="value-text">{{ passkey.authenticatorData }}</div>
+  </div>
+
+  <div class="text-row font-sf element">
+    <div class="title-text">signature</div>
+    <div class="value-text">{{ passkey.signature }}</div>
+  </div>
+
+  <div class="footnote font-sf">
+    <img src="{% static 'passkeys/imgs/FIDO-Passkey_Icon-White.png' %}" style="width: 18px">
+    &nbsp;Вы авторизовались с ключом доступа
+  </div>
+
+  <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
+
+  <script>
+      $(document).ready(function() {
+      $(".element").each(function(index) {
+          var $element = $(this);
+          setTimeout(function() {
+              $element.addClass("visible");
+          }, index * 150);
+      });
+  });
+  </script>
+
+  {% endwith %}
+  {% endwith %}
+  {% endwith %}
+  {% endif %}
+</body>
+
+</html>
+

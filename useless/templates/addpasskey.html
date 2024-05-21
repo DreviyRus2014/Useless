@@ -1,0 +1,72 @@
+{% load static %}
+
+<head>
+
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'css/background-animation.css' %}" rel="stylesheet" type="text/css">
+  <script src="{% static 'vendor/jquery/jquery.min.js'%}"></script>
+
+</head>
+
+<body class="bg-dark">
+    <div class="circle-container">
+        <div class="circle"></div>
+    </div>
+    
+</body>
+
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+<script src="{%static 'vendor/jquery-easing/jquery.easing.min.js'%}"></script>
+
+<script type="application/javascript" src="{% static 'passkeys/js/base64url.js' %}"></script>
+<script type="application/javascript" src="{% static 'passkeys/js/helpers.js' %}"></script>
+<script type="application/javascript">
+
+var MakeCredReq = (makeCredReq) => {
+    makeCredReq.publicKey.challenge = base64url.decode(makeCredReq.publicKey.challenge);
+    makeCredReq.publicKey.user.id = base64url.decode(makeCredReq.publicKey.user.id);
+
+    for (let excludeCred of makeCredReq.publicKey.excludeCredentials) {
+        excludeCred.id = base64url.decode(excludeCred.id);
+    }
+
+    return makeCredReq;
+}
+
+fetch('{% url 'passkeys:reg_begin' %}', {})
+    .then(response => {
+        if (response.ok) {
+            return response.json().then(request => {
+                return MakeCredReq(request);
+            });
+        }
+
+        throw new Error('Error getting registration data!');
+    })
+
+    .then(options => {
+        return navigator.credentials.create(options);
+    })
+
+    .then(attestation => {
+        attestation["key_name"] = $("#key_name").val();
+        return fetch('{% url 'passkeys:reg_complete' %}', {
+            method: 'POST',
+            body: JSON.stringify(publicKeyCredentialToJSON(attestation))
+        });
+    })
+
+    .then(response => {
+        var stat = response.ok ? 'successful' : 'unsuccessful';
+        return response.json();
+    })
+
+    .then(response => {
+        if (response.status == 'OK') {
+            window.location.href = "/?registered=true"
+        }
+    })
+
+</script>
+
+</html>

@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    position: relative;
+    height: 100vh;
+}
+
+.circle-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.circle {
+    width: 350px;
+    height: 350px;
+    background-color: rgba(10, 132, 255, 0.2);
+    border-radius: 50%;
+    animation: moveCircle 8s infinite alternate ease-in-out;
+    filter: blur(10px);
+}
+
+@keyframes moveCircle {
+    0% {
+        transform: translate(-50%, -50%);
+    }
+    25% {
+        transform: translate(-50%, -50%) translate(-10%, -10%);
+    }
+    50% {
+        transform: translate(-50%, -50%) translate(-5%, -5%);
+    }
+    100% {
+        transform: translate(-50%, -50%);
+    }
+}
